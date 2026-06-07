@@ -1,0 +1,39 @@
+name: Build Device Tree Blob
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Ermöglicht dir das manuelle Starten über den GitHub "Actions" Tab
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Compiler
+        run: sudo apt-get update && sudo apt-get install -y device-tree-compiler
+
+      - name: Compile DTS to DTB
+        run: |
+          # HIER ANPASSEN: Ersetze 'deine_datei.dts' mit dem echten Dateinamen
+          dtc -I dts -O dtb -o rk3326-xu10.dtb deine_datei.dts
+
+      - name: Validation Check
+        run: |
+          # Prüft, ob der Wert 1416MHz im Binärfile existiert
+          if strings rk3326-xu10.dtb | grep -q "1416"; then
+            echo "::notice::Erfolg: 1416MHz wurde im DTB gefunden!"
+          else
+            echo "::error::FEHLER: 1416MHz wurde nicht im DTB gefunden!"
+            exit 1
+          fi
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rk3326-xu10-dtb
+          path: rk3326-xu10.dtb
