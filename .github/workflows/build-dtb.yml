@@ -18,9 +18,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y device-tree-compiler
 
       - name: Compile DTS to DTB
-        run: |
-          # HIER ANPASSEN: Ersetze 'deine_datei.dts' mit dem echten Dateinamen
-          dtc -I dts -O dtb -o rk3326-xu10.dtb deine_datei.dts
+        run:  dtc -I dts -O dtb -o rk3326-xu10.dtb device_tree.dts
 
       - name: Validation Check
         run: |
