@@ -1,37 +1,120 @@
-name: Build Device Tree Blob
+name: Build & Patch R36S Type 5 DTB (Dynamic)
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch: # Ermöglicht dir das manuelle Starten über den GitHub "Actions" Tab
+  workflow_dispatch:
 
 jobs:
-  compile:
+  patch-and-compile:
     runs-on: ubuntu-latest
     
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install Compiler
-        run: sudo apt-get update && sudo apt-get install -y device-tree-compiler
+      - name: Install Compiler & Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y device-tree-compiler python3
 
-      - name: Compile DTS to DTB
-        run:  dtc -I dts -O dtb -o rk3326-xu10.dtb device_tree.dts
+      - name: Analyze txt files and Patch DTS
+        run: |
+          python3 -c "import sys, textwrap; exec(textwrap.dedent(sys.stdin.read()))" << 'EOF'
+          import re
+          import os
+          import sys
+
+          DTS_FILE = "device_tree.dts"
+          FN_SEARCH_FILE = "fn_button_search.txt"
+          
+          if not os.path.exists(DTS_FILE):
+              print(f"FEHLER: {DTS_FILE} nicht gefunden! Beende...")
+              sys.exit(1)
+
+          with open(DTS_FILE, "r") as f:
+              dts_content = f.read()
+
+          print("=== STARTE DYNAMISCHE ANALYSE ===")
+
+          # 1. FN-Button Info aus den .txt Dateien extrahieren
+          fn_label = "fn" # Fallback
+          if os.path.exists(FN_SEARCH_FILE):
+              with open(FN_SEARCH_FILE, "r") as f:
+                  fn_content = f.read()
+                  # Suche nach dem exakten Label-Namen in der Suchdatei (z.B. label = "fn" oder "func")
+                  match = re.search(r'label\s*=\s*"([^"]*(?:fn|func)[^"]*)"', fn_content, re.IGNORECASE)
+                  if match:
+                      fn_label = match.group(1)
+                      print(f"Info aus {FN_SEARCH_FILE}: Exaktes FN-Label lautet '{fn_label}'")
+                  else:
+                      print(f"Info aus {FN_SEARCH_FILE}: Kein abweichendes Label gefunden, nutze Standard 'fn'")
+
+          # --- PATCH 1: Rechter Analogstick Invertierung ---
+          print("\n--- Patche rechten Analogstick (RX/RY Achsen) ---")
+          def patch_axis(match):
+              block = match.group(0)
+              if "abs-range" in block:
+                  # Tauscht die Werte (min max zu max min), um Hardware-Invertierung zu fixen
+                  block = re.sub(r'abs-range\s*=\s*<([^>]+)\s+([^>]+)>;', r'abs-range = <\2 \1>;', block)
+                  print("  -> abs-range Werte für Achse erfolgreich invertiert (gefixt).")
+              return block
+
+          # Sucht nach ADC-Joystick-Nodes mit linux,code 3 (RX) und 4 (RY)
+          dts_patched = re.sub(
+              r'([a-zA-Z0-9_-]+@[0-9a-f]+\s*\{[^}]*linux,code\s*=\s*<(0x03|0x04|3|4)>[^}]*\})', 
+              patch_axis, 
+              dts_content, 
+              flags=re.IGNORECASE
+          )
+
+          # --- PATCH 2: FN-Button fix ---
+          print(f"\n--- Patche FN-Button (Target Label: '{fn_label}') ---")
+          def patch_fn(match):
+              block = match.group(0)
+              # Setzt den Keycode auf 316 (BTN_MODE) - das ist der korrekte ArkOS/DarkOS Hotkey
+              block = re.sub(r'linux,code\s*=\s*<[^>]+>;', r'linux,code = <316>;', block)
+              # Aktiviert den Button, falls er hardwareseitig deaktiviert wurde
+              block = re.sub(r'status\s*=\s*"disabled";', r'status = "okay";', block)
+              print("  -> FN-Button Keycode auf 316 gesetzt und Status auf 'okay' aktiviert.")
+              return block
+
+          # Sucht den Block, der das dynamisch gefundene Label enthält
+          regex_pattern = r'([a-zA-Z0-9_-]+@[0-9a-f]+\s*\{[^}]*label\s*=\s*"' + re.escape(fn_label) + r'"[^}]*\})'
+          dts_patched = re.sub(
+              regex_pattern, 
+              patch_fn, 
+              dts_patched, 
+              flags=re.IGNORECASE
+          )
+
+          # --- ERGEBNIS SPEICHERN ---
+          with open("patched_device_tree.dts", "w") as f:
+              f.write(dts_patched)
+          
+          print("\n=== PATCHES ABGESCHLOSSEN ===")
+          print("Datei gespeichert als: patched_device_tree.dts")
+          EOF
+
+      - name: Compile patched DTS to DTB
+        run:  |
+          echo "Kompiliere gepatchte DTS zur DTB..."
+          # WICHTIG: -p 1024 fügt Padding hinzu. Ohne das kann der Bootloader des R36S streiken!
+          dtc -I dts -O dtb -p 1024 -o rk3326-r36s-type5-linux.dtb patched_device_tree.dts
 
       - name: Validation Check
         run: |
-          # Prüft, ob der Wert 1416MHz im Binärfile existiert
-          if strings rk3326-xu10.dtb | grep -q "1416"; then
-            echo "::notice::Erfolg: 1416MHz wurde im DTB gefunden!"
+          if [ -s "rk3326-r36s-type5-linux.dtb" ]; then
+            echo "::notice::Erfolg: rk3326-r36s-type5-linux.dtb wurde erfolgreich kompiliert und ist bereit!"
           else
-            echo "::error::FEHLER: 1416MHz wurde nicht im DTB gefunden!"
+            echo "::error::FEHLER: Die DTB Datei wurde nicht erstellt oder ist leer!"
             exit 1
           fi
 
-      - name: Upload Artifact
+      - name: Upload Patched Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: rk3326-xu10-dtb
-          path: rk3326-xu10.dtb
+          name: R36S-Type5-Patched-DTB
+          path: rk3326-r36s-type5-linux.dtb
+          retention-days: 30
