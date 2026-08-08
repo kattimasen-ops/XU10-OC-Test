@@ -1,0 +1,6 @@
+3744:		invert-absx;
+3745:		invert-absy;
+3746:		invert-absrx;
+3747:		invert-absry;
+3902:		enable-active-high;
+3920:		rockchip,auto-wakeup-screen-invert = <0x01>;

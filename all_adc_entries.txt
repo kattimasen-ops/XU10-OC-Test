@@ -1,0 +1,22 @@
+1680:	tsadc@ff280000 {
+1681:		compatible = "rockchip,px30-tsadc";
+1686:		clock-names = "tsadc\0apb_pclk";
+1690:		reset-names = "tsadc-apb";
+1701:	saradc@ff288000 {
+1702:		compatible = "rockchip,px30-saradc\0rockchip,rk3399-saradc";
+1707:		clock-names = "saradc\0apb_pclk";
+1709:		reset-names = "saradc-apb";
+2865:		tsadc {
+2867:			tsadc-otp-gpio {
+2872:			tsadc-otp-out {
+3706:			rockchip,adc_value = <0xa6>;
+3712:			rockchip,adc_value = <0x09>;
+3724:		io-channel-names = "amux_adc";
+3731:		button-adc-scale = <0x02>;
+3732:		button-adc-deadzone = <0x40>;
+3733:		button-adc-fuzz = <0x20>;
+3734:		button-adc-flat = <0x20>;
+4017:		tsadc = "/tsadc@ff280000";
+4018:		saradc = "/saradc@ff288000";
+4116:		tsadc_otp_gpio = "/pinctrl/tsadc/tsadc-otp-gpio";
+4117:		tsadc_otp_out = "/pinctrl/tsadc/tsadc-otp-out";

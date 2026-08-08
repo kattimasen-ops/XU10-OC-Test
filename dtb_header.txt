@@ -1,0 +1,14 @@
+DTB HEADER
+==========
+
+Magic              : 0xd00dfeed
+Total size         : 94059
+Structure offset   : 0x00000038
+Strings offset     : 0x0001389c
+Reserve map offset : 0x00000028
+Version            : 17
+Last compatible    : 16
+Boot CPU           : 0
+Strings size       : 14031
+Structure size     : 79972
+Actual file size   : 94059

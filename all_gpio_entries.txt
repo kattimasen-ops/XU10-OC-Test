@@ -1,0 +1,91 @@
+1115:				gpio-controller;
+1116:				#gpio-cells = <0x02>;
+1119:				rk817_ts_gpio1 {
+1120:					pins = "gpio_ts";
+1125:				rk817_gt_gpio2 {
+1126:					pins = "gpio_gt";
+1132:					pins = "gpio_ts";
+1138:					pins = "gpio_gt";
+1144:					pins = "gpio_slp";
+1150:					pins = "gpio_slp";
+1156:					pins = "gpio_slp";
+1162:					pins = "gpio_slp";
+1391:				dc_det_gpio = <0x68 0x05 0x00>;
+1694:		pinctrl-names = "gpio\0otpout";
+1926:		cd-gpios = <0x5e 0x03 0x01>;
+1955:		cd-gpios = <0x5e 0x02 0x01>;
+2218:			reset-gpios = <0x68 0x1b 0x01>;
+2219:			enable-gpios = <0x68 0x03 0x00>;
+2689:		gpio0@ff040000 {
+2690:			compatible = "rockchip,gpio-bank";
+2694:			gpio-controller;
+2695:			#gpio-cells = <0x02>;
+2701:		gpio1@ff250000 {
+2702:			compatible = "rockchip,gpio-bank";
+2706:			gpio-controller;
+2707:			#gpio-cells = <0x02>;
+2713:		gpio2@ff260000 {
+2714:			compatible = "rockchip,gpio-bank";
+2718:			gpio-controller;
+2719:			#gpio-cells = <0x02>;
+2725:		gpio3@ff270000 {
+2726:			compatible = "rockchip,gpio-bank";
+2730:			gpio-controller;
+2731:			#gpio-cells = <0x02>;
+2867:			tsadc-otp-gpio {
+2895:			uart0-rts-gpio {
+2918:			uart1-rts-gpio {
+2957:			uart3m0-rts-gpio {
+2980:			uart3m1-rts-gpio {
+3337:			sdmmc-gpio {
+3360:			sdio-gpio {
+3618:			soc_slppin_gpio {
+3728:		amux-a-gpios = <0xbd 0x10 0x01>;
+3729:		amux-b-gpios = <0xbd 0x0f 0x01>;
+3730:		amux-en-gpios = <0xbd 0x0c 0x01>;
+3751:			gpios = <0x68 0x16 0x01>;
+3752:			label = "GPIO DPAD-UP";
+3757:			gpios = <0x68 0x17 0x01>;
+3758:			label = "GPIO DPAD-DOWN";
+3763:			gpios = <0x68 0x14 0x01>;
+3764:			label = "GPIO DPAD-LEFT";
+3769:			gpios = <0x68 0x15 0x01>;
+3770:			label = "GPIO DPAD-RIGHT";
+3775:			gpios = <0x68 0x10 0x01>;
+3776:			label = "GPIO BTN-A";
+3781:			gpios = <0x68 0x11 0x01>;
+3782:			label = "GPIO BTN-B";
+3787:			gpios = <0x68 0x13 0x01>;
+3788:			label = "GPIO BTN-Y";
+3793:			gpios = <0x68 0x12 0x01>;
+3794:			label = "GPIO BTN-X";
+3799:			gpios = <0xbd 0x0e 0x01>;
+3805:			gpios = <0xbd 0x0d 0x01>;
+3811:			gpios = <0x68 0x0a 0x01>;
+3812:			label = "GPIO BTN_F";
+3817:			gpios = <0x68 0x0d 0x01>;
+3818:			label = "GPIO BTN_TL";
+3823:			gpios = <0x68 0x0b 0x01>;
+3824:			label = "GPIO BTN_TR";
+3829:			gpios = <0x68 0x18 0x01>;
+3835:			gpios = <0x68 0x0c 0x01>;
+3836:			label = "GPIO BTN_TR2";
+3841:			gpios = <0x68 0x0e 0x01>;
+3842:			label = "GPIO BTN_TL2";
+3847:			gpios = <0x68 0x19 0x01>;
+3875:		simple-audio-card,hp-det-gpio = <0xbd 0x16 0x01>;
+3901:		gpio = <0x68 0x04 0x00>;
+3972:		rk817_ts_gpio1 = "/i2c@ff180000/pmic@20/pinctrl_rk8xx/rk817_ts_gpio1";
+3973:		rk817_gt_gpio2 = "/i2c@ff180000/pmic@20/pinctrl_rk8xx/rk817_gt_gpio2";
+4091:		gpio0 = "/pinctrl/gpio0@ff040000";
+4092:		gpio1 = "/pinctrl/gpio1@ff250000";
+4093:		gpio2 = "/pinctrl/gpio2@ff260000";
+4094:		gpio3 = "/pinctrl/gpio3@ff270000";
+4116:		tsadc_otp_gpio = "/pinctrl/tsadc/tsadc-otp-gpio";
+4121:		uart0_rts_gpio = "/pinctrl/uart0/uart0-rts-gpio";
+4125:		uart1_rts_gpio = "/pinctrl/uart1/uart1-rts-gpio";
+4131:		uart3m0_rts_gpio = "/pinctrl/uart3-m0/uart3m0-rts-gpio";
+4135:		uart3m1_rts_gpio = "/pinctrl/uart3-m1/uart3m1-rts-gpio";
+4201:		sdmmc_gpio = "/pinctrl/sdmmc/sdmmc-gpio";
+4205:		sdio_gpio = "/pinctrl/sdio/sdio-gpio";
+4247:		soc_slppin_gpio = "/pinctrl/pmic/soc_slppin_gpio";

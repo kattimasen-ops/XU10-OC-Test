@@ -1,0 +1,20 @@
+1110:			pwrkey {
+1383:				min_input_voltage = <0x1194>;
+1384:				max_input_current = <0x5dc>;
+2566:		devfreq-events = <0xad>;
+2808:			input-schmitt-enable;
+2822:		pcfg-input-high {
+2824:			input-enable;
+2828:		pcfg-input {
+2829:			input-enable;
+3694:	rg351-keys {
+3695:		compatible = "rockchip,key";
+3703:		vol-down-key {
+3709:		vol-up-key {
+3731:		button-adc-scale = <0x02>;
+3732:		button-adc-deadzone = <0x40>;
+3733:		button-adc-fuzz = <0x20>;
+3734:		button-adc-flat = <0x20>;
+4110:		pcfg_input_high = "/pinctrl/pcfg-input-high";
+4111:		pcfg_input = "/pinctrl/pcfg-input";
+4254:		vol_keys = "/rg351-keys";

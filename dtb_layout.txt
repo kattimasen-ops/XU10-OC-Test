@@ -1,0 +1,13 @@
+DTB LAYOUT
+==========
+
+Structure offset : 0x00000038
+Structure size   : 79972 bytes
+Structure end    : 0x0001389c
+
+Strings offset   : 0x0001389c
+Strings size     : 14031 bytes
+Strings end      : 0x00016f6b
+
+DTB file size    : 94059 bytes
+DTB total size   : 94059 bytes
